@@ -1,0 +1,36 @@
+#Estructura basica del .yml (version, services, volumes, networks)
+version: "3.8"
+
+services:
+  desafio_data:
+    container_name: my_desafio_data
+    #image: nombre_image:tag
+    #En este caso utilizo build porque voy a levantar un Dockerfile
+    build: .
+    #working_dir: /usr/src/desafio
+    depends_on:
+      - postgresdb
+    environment:
+      DB_CONSTRUCT: 'postgresql://postgres:postgres@postgresdb:5432/postgres'
+    #volumes:
+      #- nombre_volumes_local:dir_volume_container
+    networks:
+      - net-desafio
+  postgresdb:
+    container_name: my_postgresdb
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: 'postgres'
+    ports:
+      - "5432:5432"
+    volumes:
+      - 'postgresdb_volume:/var/lib/postgresql/data'
+    networks:
+      - net-desafio
+
+volumes:
+  postgresdb_volume:
+
+networks:
+  net-desafio:
+    
